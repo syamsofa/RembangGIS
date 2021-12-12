@@ -56,6 +56,23 @@ class Model_data extends CI_Model
             'data' => $data
         );
     }
+    public function DataVariabel()
+    {
+        $query = $this->db->query("select * from variabel");
+        $data = array();
+
+        foreach ($query->result_array() as $row) {
+
+           
+            $data[] = $row;
+        }
+
+        return array(
+            'sukses' => true,
+            'data' => $data
+        );
+    }
+
     public function SumDesaByKecamatan($KdWilayah,$IdVariabel)
     {
 

@@ -64,9 +64,9 @@
                                 <a class="nav-link" href="<?php echo base_url(); ?>site/non_tematik">Non Tematik</a>
                             </nav>
                         </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <a class="nav-link" href="<?php echo base_url(); ?>site/variabel" >
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Pages
+                            Variabel
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
 

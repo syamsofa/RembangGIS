@@ -47,6 +47,17 @@ class Site extends CI_Controller
 		// print_r($data);
 		$this->load->view('site', $data);
 	}
+	public function variabel()
+	{
+
+		$data = [
+			"menu" => $this->menuPilih,
+			"judulMenu" => "Variabel",
+			"daftarVariabel" => $this->model_variabel->ReadVariabel()
+		];
+		// print_r($data);
+		$this->load->view('site', $data);
+	}
 	function tes()
 	{
 		print_r($this->model_variabel->ReadVariabel());

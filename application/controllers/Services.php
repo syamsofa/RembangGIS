@@ -24,4 +24,8 @@ class Services extends CI_Controller
 			$input
 		));
 	}
+	public function Variabel()
+	{
+		echo json_encode($this->model_data->DataVariabel());
+	}
 }

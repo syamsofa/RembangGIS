@@ -79,7 +79,6 @@
     .wrapper,
     #map,
     .form {
-        height: 300px;
         width: 100%;
         padding: 0;
         margin: 0
@@ -89,20 +88,13 @@
         position: relative
     }
 
-    #map,
-    .form {
+    #map {
         position: absolute;
         top: 0;
         left: 0
     }
 
     .form {
-        z-index: 100000;
-        padding: 50px 60px;
-        pointer-events: none;
-    }
-
-    .form>* {
         pointer-events: auto;
     }
 </style>
@@ -148,6 +140,7 @@
     }
 
     function onLocationFound(e) {
+       
         var radius = e.accuracy;
         console.log(e)
 
@@ -190,6 +183,26 @@
             <div class="card-header">
                 <i class="fa fa-globe" aria-hidden="true"></i>
                 <div class="inline">Tematik By Kecamatan</div> Variabel : <div class="inline" id="keteranganTematik">Ok</div>
+                <div class="col-xl-12">
+                    <div class="form">
+                        <div class="form-group">
+                            <label for="exampleFormControlSelect1"><b>Pilih Variabel: <b></label>
+                            <select class="form-control" style="width: 100%;" id="selectVariabel" onchange="getDataKecamatanByVariabel(this.value)">
+                                <option>PILIH</option>
+                                <?php
+                                foreach ($daftarVariabel as $variabel) {
+
+                                    echo "<option value=" . $variabel['RecId'] . ">" . $variabel['NamaVariabel'] . ' (' . $variabel['Sumber'] . ") </option>";
+                                    # code...
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success">Get Data</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="card-body" id="petaTematik" style="margin: auto;width: 100%; height: 600px;">
                 <button type="button" id="Btn2" value="Ke Lokasi Saya Berada" onclick="GoToOurLocation()" style="position: absolute;
@@ -197,26 +210,10 @@
                     <i class="fa fa-compass" aria-hidden="true"></i> Ke Lokasi Saya</button>
             </div>
 
-            <div class="form">
-                <div class="form-group">
-                    <label for="exampleFormControlSelect1"><b>Pilih Variabel s: <b></label>
-                    <select class="form-control" style="width: 59%;" id="selectVariabel" onchange="getDataKecamatanByVariabel(this.value)">
-                        <option>PILIH</option>
-                        <?php
-                        foreach ($daftarVariabel as $variabel) {
 
-                            echo "<option value=" . $variabel['RecId'] . ">" . $variabel['NamaVariabel'] . ' (' . $variabel['Sumber'] . ") </option>";
-                            # code...
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-success">Get Data</button>
-                </div>
-            </div>
         </div>
     </div>
+
 
 </div>
 
@@ -262,7 +259,7 @@
         // "Tematik": layerKec
     };
 
-    L.control.layers(baseMaps, overlayMaps).addTo(newMap);
+    L.control.layers(baseMaps, overlayMaps,{position: 'bottomright'}).addTo(newMap);
 
 
     info.onAdd = function(map) {
@@ -366,4 +363,3 @@
 
     }).addTo(newMap);
 </script>
-
