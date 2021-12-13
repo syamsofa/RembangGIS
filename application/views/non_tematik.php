@@ -16,26 +16,12 @@
 <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 <link rel="stylesheet" href="<?php echo base_url(); ?>lib/Control.FullScreen.css" />
 <script src="<?php echo base_url(); ?>lib/Control.FullScreen.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css"/>
+<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
 <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
-<script>
-    class gradeLegend {
-        constructor(grade_) {
-            this.grade = grade_
-        }
-        getColor(d) {
-            return d > 20 ? '#800026' :
-                d > 16 ? '#BD0026' :
-                d > 12 ? '#E31A1C' :
-                d > 8 ? '#FC4E2A' :
-                d > 3 ? '#FD8D3C' :
-                d > 2 ? '#FEB24C' :
-                d > 0 ? '#FED976' :
-                '#FFEDA0';
-        }
 
-    }
-</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@latest/dist/L.Control.Locate.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@latest/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
 <style>
     #petaTematik,
     #container {
@@ -180,7 +166,7 @@
         <div class="card mb-4">
             <div class="card-header">
                 <i class="fa fa-globe" aria-hidden="true"></i>
-                <div class="inline">Tematik By Kecamatan</div> Variabel : <div class="inline" id="keteranganTematik">Ok</div>
+                <div class="inline">Peta navigasi</div>
             </div>
             <div class="card-body" id="petaTematik" style="margin: auto;width: 100%; height: 600px;">
             </div>
@@ -195,6 +181,24 @@
         maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
     })
+    var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+
+    var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+
 
 
     var newMap = L.map('petaTematik', {
@@ -203,10 +207,30 @@
             position: 'topleft'
         },
         doubleClickZoom: true,
-        layers: [petaOverlay]
+        layers: [petaOverlay, googleSat]
     }).setView([-6.74003, 111.47556], 12); //mengatur zoom dengan nilai 9
 
+    var overlayMaps = {};
+    var baseMaps = {
+        // "Overlay": petaOverlay
+        // "Overlay": petaOverlay,
+        "Satelit": googleSat,
+        "Terain": googleTerrain,
+        "Street": googleStreets,
+        "Hibrid": googleHybrid
+    };
 
+    L.control.layers(baseMaps, overlayMaps, {
+        position: 'bottomright'
+    }).addTo(newMap);
+    var lc = L.control.locate({
+        position: 'topleft',
+        strings: {
+            title: "Show me where I am, yo!"
+        }
+    }).addTo(newMap);
+
+    // L.control.locate().addTo(newMap);
 
     // layerKec.addTo(newMap);
 </script>
@@ -240,4 +264,37 @@
             L.latLng(-6.773389679288546, 111.51108094398113)
         ]
     }).addTo(newMap);
+</script>
+
+<script>
+    function createButton(label, container) {
+        var btn = L.DomUtil.create('button', '', container);
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('class', 'btn btn-success');
+        btn.innerHTML = label;
+        return btn;
+    }
+    newMap.on('click', function(e) {
+        var container = L.DomUtil.create('div'),
+            startBtn = createButton('Start from this location', container),
+            destBtn = createButton('Go to this location', container);
+
+        L.popup()
+            .setContent(container)
+            .setLatLng(e.latlng)
+            .openOn(newMap);
+    });
+    L.DomEvent.on(startBtn, 'click', function() {
+        alert('da')
+        control.spliceWaypoints(0, 1, e.latlng);
+        map1.closePopup();
+    });
+
+    L.DomEvent.on(destBtn, 'click', function() {
+        control.spliceWaypoints(control.getWaypoints().length - 1, 1, e.latlng);
+        map1.closePopup();
+    });
+</script>
+<script>
+    newMap.flyTo([13.87992, 45.9791], 12)
 </script>
