@@ -31,7 +31,8 @@ class Site extends CI_Controller
 		$data = [
 			"menu" => $this->menuPilih,
 			"judulMenu" => "Peta Tematik Kab Rembang By Kecamatan",
-			"daftarVariabel" => $this->model_variabel->ReadVariabel()
+			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
+			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
 		];
 		// print_r($data);
 		$this->load->view('site', $data);
@@ -42,6 +43,7 @@ class Site extends CI_Controller
 		$data = [
 			"menu" => $this->menuPilih,
 			"judulMenu" => "Non Tematik",
+			"daftarKecamatan" => $this->model_data->DaftarKecamatan(),
 			"daftarVariabel" => $this->model_variabel->ReadVariabel()
 		];
 		// print_r($data);
@@ -53,7 +55,21 @@ class Site extends CI_Controller
 		$data = [
 			"menu" => $this->menuPilih,
 			"judulMenu" => "Variabel",
+			"daftarKecamatan" => $this->model_data->DaftarKecamatan(),
 			"daftarVariabel" => $this->model_variabel->ReadVariabel()
+		];
+		// print_r($data);
+		$this->load->view('site', $data);
+	}
+	public function input_data()
+	{
+
+		$data = [
+			"menu" => $this->menuPilih,
+			"judulMenu" => "Input Data",
+			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
+			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
+			
 		];
 		// print_r($data);
 		$this->load->view('site', $data);

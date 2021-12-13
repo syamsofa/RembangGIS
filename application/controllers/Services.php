@@ -24,8 +24,24 @@ class Services extends CI_Controller
 			$input
 		));
 	}
+	public function DataKecamatanByVariabelByTahun()
+	{
+		$IdVariabel = $this->input->post('IdVariabel');
+		$Tahun = $this->input->post('Tahun');
+		echo json_encode($this->model_data->DataKecamatanByVariabelByTahun(
+			$IdVariabel,$Tahun
+		));
+	}
 	public function Variabel()
 	{
 		echo json_encode($this->model_data->DataVariabel());
+	}
+	public function DaftarKecamatan()
+	{
+		echo json_encode($this->model_data->DaftarKecamatan());
+	}
+	public function UbahData()
+	{
+		echo json_encode($this->model_data->UbahData($this->input->post()));
 	}
 }

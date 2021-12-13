@@ -9,9 +9,11 @@
     <meta name="author" content="" />
     <title>Peta Tematik Rembang</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
     <link href="<?php echo base_url(); ?>/sb-admin/dist/css/styles.css" rel="stylesheet" />
     <script src="<?php echo base_url(); ?>lib/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <link href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <style>
@@ -64,12 +66,14 @@
                                 <a class="nav-link" href="<?php echo base_url(); ?>site/non_tematik">Non Tematik</a>
                             </nav>
                         </div>
-                        <a class="nav-link" href="<?php echo base_url(); ?>site/variabel" >
+                        <a class="nav-link" href="<?php echo base_url(); ?>site/variabel">
                             <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                             Variabel
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-
+                        <a class="nav-link" href="<?php echo base_url(); ?>site/input_data">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file"></i></div>
+                            Input Data
+                        </a>
 
                     </div>
 
@@ -89,7 +93,13 @@
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active"><?php echo $judulMenu; ?></li>
                     </ol>
-                    <?php $this->load->view($menu, ["daftarVariabel" => $daftarVariabel]); ?>
+                    <?php $this->load->view(
+                        $menu,
+                        [
+                            "daftarVariabel" => $daftarVariabel,
+                            "daftarKecamatan" => $daftarKecamatan
+                        ]
+                    ); ?>
                 </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
@@ -107,13 +117,13 @@
         </div>
 
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/sb-admin/dist/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/sb-admin/dist/assets/demo/chart-area-demo.js"></script>
     <script src="<?php echo base_url(); ?>/sb-admin/dist/assets/demo/chart-bar-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-    <script src="<?php echo base_url(); ?>/sb-admin/dist/js/datatables-simple-demo.js"></script>
+
 </body>
 
 </html>
