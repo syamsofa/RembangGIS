@@ -164,10 +164,6 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="card mb-4">
-            <div class="card-header">
-                <i class="fa fa-globe" aria-hidden="true"></i>
-                <div class="inline">Peta navigasi</div>
-            </div>
             <div class="card-body" id="petaTematik" style="margin: auto;width: 100%; height: 600px;">
             </div>
 

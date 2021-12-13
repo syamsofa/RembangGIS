@@ -41,13 +41,18 @@
         border: 1px solid black;
     }
 
-    .info {
+    .info,
+    .infovar {
         padding: 6px 8px;
         font: 14px/16px Arial, Helvetica, sans-serif;
         background: white;
         background: rgba(255, 255, 255, 0.8);
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         border-radius: 5px;
+    }
+
+    .infovar input {
+        font-size: small;
     }
 
     .info h4 {
@@ -140,7 +145,7 @@
     }
 
     function onLocationFound(e) {
-       
+
         var radius = e.accuracy;
         console.log(e)
 
@@ -180,35 +185,12 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="card mb-4">
-            <div class="card-header">
-                <i class="fa fa-globe" aria-hidden="true"></i>
-                <div class="inline">Tematik By Kecamatan</div> Variabel : <div class="inline" id="keteranganTematik">Ok</div>
-                <div class="col-xl-12">
-                    <div class="form">
-                        <div class="form-group">
-                            <label for="exampleFormControlSelect1"><b>Pilih Variabel: <b></label>
-                            <select class="form-control" style="width: 100%;" id="selectVariabel" onchange="getDataKecamatanByVariabel(this.value)">
-                                <option>PILIH</option>
-                                <?php
-                                foreach ($daftarVariabel as $variabel) {
-
-                                    echo "<option value=" . $variabel['RecId'] . ">" . $variabel['NamaVariabel'] . ' (' . $variabel['Sumber'] . ") </option>";
-                                    # code...
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-success">Get Data</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="card-body" id="petaTematik" style="margin: auto;width: 100%; height: 600px;">
                 <button type="button" id="Btn2" value="Ke Lokasi Saya Berada" onclick="GoToOurLocation()" style="position: absolute;
                 bottom: 50px;" class="btnStyle span3 leaflet-control btn btn-button btn-success">
                     <i class="fa fa-compass" aria-hidden="true"></i> Ke Lokasi Saya</button>
             </div>
+
 
 
         </div>
@@ -259,7 +241,34 @@
         // "Tematik": layerKec
     };
 
-    L.control.layers(baseMaps, overlayMaps,{position: 'bottomright'}).addTo(newMap);
+    L.control.layers(baseMaps, overlayMaps, {
+        position: 'bottomright'
+    }).addTo(newMap);
+    var pilihvar = L.control({
+        position: 'topright'
+    });
+    pilihvar.onAdd = function(map) {
+        var div = L.DomUtil.create('div', 'infovar ');
+        div.innerHTML = "<div class='form-group'>" +
+            "<label for='exampleFormControlSelect1'><b>Pilih Variabel: <b></label>" +
+            "<select class='form-control' style='width: 100%;' id='selectVariabel' onchange='getDataKecamatanByVariabel(this.value)'>" +
+            "<option>PILIH</option>" +
+
+            "<?php
+                foreach ($daftarVariabel as $variabel) {
+
+                    echo "<option value=" . $variabel['RecId'] . ">" . $variabel['NamaVariabel'] . ' (' . $variabel['Sumber'] . ") </option>";
+                    # code...
+                }
+                ?>" +
+            "</select>" +
+            "</div>" +
+            "<div class='form-group'><br>" +
+            "</div>";
+        div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
+        return div;
+    };
+    pilihvar.addTo(newMap);
 
 
     info.onAdd = function(map) {
