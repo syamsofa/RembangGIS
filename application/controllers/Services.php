@@ -40,8 +40,17 @@ class Services extends CI_Controller
 	{
 		echo json_encode($this->model_data->DaftarKecamatan());
 	}
+	public function DataDesaByKecamatanByVariabelByTahun()
+	{
+		
+		echo json_encode($this->model_data->DataDesaByKecamatanByVariabelByTahun($this->input->post('KodeKecamatan'),$this->input->post('IdVariabel'),$this->input->post('Tahun')));
+	}
 	public function UbahData()
 	{
 		echo json_encode($this->model_data->UbahData($this->input->post()));
+	}
+	public function UbahDataDesa()
+	{
+		echo json_encode($this->model_data->UbahDataDesa($this->input->post()));
 	}
 }
