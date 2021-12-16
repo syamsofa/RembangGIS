@@ -72,23 +72,23 @@
 
         }
         getColor2(d) {
-            let color='#000000'
+            let color = '#000000'
             this.arrColor.forEach(array => {
-               
-                if (d >parseInt(array.value) ) {
+
+                if (d > parseInt(array.value)) {
                     color = array.color
-                    
+
 
                 }
-              
+
             });
 
             return color
 
 
         }
-      
-        
+
+
 
     }
 </script>
@@ -163,7 +163,7 @@
     }
 </style>
 <script>
-    var info = L.control();
+    var info = L.control({  position: 'topleft'});
 
     function zoomToFeature(e) {
         newMap.fitBounds(e.target.getBounds());
@@ -177,7 +177,7 @@
             weight: 5,
             color: '#666',
             dashArray: '',
-            fillOpacity: 0.7
+            fillOpacity: 1
         });
 
         if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
@@ -190,9 +190,9 @@
         var layer = e.target;
         layer.setStyle({
             weight: 2,
-            color: '#ffffff',
+            color: '#666',
             dashArray: '',
-            fillOpacity: 0.7
+            fillOpacity: 1
         });
 
         info.update();
@@ -269,14 +269,33 @@
     var newMap = L.map('petaTematik', {
         fullscreenControl: true,
         fullscreenControlOptions: {
-            position: 'topleft'
+            position: 'topright'
         },
 
         doubleClickZoom: true
     }).setView([-6.74003, 111.47556], 12); //mengatur zoom dengan nilai 9
 
+    var layerKec = L.geoJson(Kecamatan, {
+        style: function(feature) {
+            return {
+                weight: 2,
+                opacity: 1,
+                color: '#666',
+                dashArray: '3',
+                fillColor: 'white',
+                fillOpacity: 1
+            };
+        },
+        onEachFeature: onEachFeatureKecamatan
+        //,
+    })
+
+
+
+    layerKec.addTo(newMap)
+
     var pilihvar = L.control({
-        position: 'topright'
+        position: 'topleft'
     });
 
     pilihvar.onAdd = function(map) {
@@ -313,7 +332,7 @@
     info.update = function(props) {
         this._div.innerHTML = '<h7>Informasi Kecamatan ' + (props ?
             props.KECAMATAN + '</h7><b> <br>Nilai : ' + props.nilai + '</b>' :
-            'Silahkan hover mouse ke kecamatan tujuan untuk melihat datanya');
+            '');
     };
 
     info.addTo(newMap);
@@ -323,6 +342,7 @@
 </script>
 <script>
     L.control.browserPrint({
+        position: 'topright',
         // printLayer: petaOverlay,
         closePopupsOnPrint: false,
         printModes: [
@@ -408,9 +428,9 @@
                                 // fillColor: '#000000',
                                 weight: 2,
                                 opacity: 1,
-                                color: 'white',
+                                color: '#666',
                                 dashArray: '3',
-                                fillOpacity: 0.7
+                                fillOpacity: 1
                             };
                         },
                         onEachFeature: onEachFeatureKecamatan
