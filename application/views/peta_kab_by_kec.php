@@ -371,6 +371,7 @@
                 },
                 success: function(output) {
 
+                    console.log(output)
                     var GradeLegend = new gradeLegend()
                     GradeLegend.setMin(output.Data.NilaiMinimal)
                     GradeLegend.setMax(output.Data.NilaiMaksimal)
@@ -416,6 +417,7 @@
 
                     var iter = 0
                     Kecamatan.features.forEach(element => {
+                        console.log(element.properties.KECAMATAN,output.Data.DataKecamatan[iter].Nama)
                         element.properties.nilai = output.Data.DataKecamatan[iter].SumDesaByKecamatan
                         iter++
                     });

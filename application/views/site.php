@@ -20,7 +20,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/sb-admin/dist/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
         html {
             font: 12px;
@@ -121,9 +122,7 @@
 
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Start Bootstrap
-                </div>
+                    </div>
 
             </nav>
 
@@ -131,10 +130,7 @@
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4"><?php echo $judulMenu; ?></h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active"><?php echo $judulMenu; ?></li>
-                    </ol>
+                    <h2 class="mt-4"><?php echo $judulMenu; ?></h2>
                     <?php $this->load->view(
                         $menu,
                         [
@@ -147,11 +143,9 @@
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2021</div>
+                        <div class="text-muted">Copyright &copy; BPS Kab Rembang 2021</div>
                         <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
+
                         </div>
                     </div>
                 </div>

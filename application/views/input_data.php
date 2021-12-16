@@ -1,8 +1,3 @@
-<style>
-    table.dataTable td {
-        font-size: 0.9em;
-    }
-</style>
 
 <div class="row">
     <main>
