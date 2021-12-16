@@ -21,7 +21,9 @@ class Site extends CI_Controller
 		$data = [
 			"menu" => $this->menuPilih,
 			"judulMenu" => "Index",
-			"daftarVariabel" => $this->model_variabel->ReadVariabel()
+			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
+			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
+	
 		];
 		$this->load->view('site', $data);
 	}
@@ -74,8 +76,17 @@ class Site extends CI_Controller
 		// print_r($data);
 		$this->load->view('site', $data);
 	}
-	function tes()
+	public function login()
 	{
-		print_r($this->model_variabel->ReadVariabel());
+
+		$data = [
+			"menu" => $this->menuPilih,
+			"judulMenu" => "Login",
+			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
+			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
+			
+		];
+		// print_r($data);
+		$this->load->view('site', $data);
 	}
 }

@@ -15,7 +15,7 @@
     <link href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <style>
         html {
@@ -67,14 +67,36 @@
                                 <a class="nav-link" href="<?php echo base_url(); ?>site/non_tematik">Non Tematik</a>
                             </nav>
                         </div>
-                        <a class="nav-link" href="<?php echo base_url(); ?>site/variabel">
-                            <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
-                            Variabel
-                        </a>
-                        <a class="nav-link" href="<?php echo base_url(); ?>site/input_data">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file"></i></div>
-                            Input Data
-                        </a>
+                        <?php
+                        if ($this->session->userdata()) {
+                        ?>
+
+                            <a class="nav-link" href="<?php echo base_url(); ?>site/variabel">
+                                <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                                Variabel
+                            </a>
+                            <a class="nav-link" href="<?php echo base_url(); ?>site/input_data">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file"></i></div>
+                                Input Data
+                            </a>
+                        <?php
+
+                        }
+                        ?>
+
+                        <?php
+                        if (!$this->session->userdata()) {
+                        ?>
+
+                            <a class="nav-link" href="<?php echo base_url(); ?>site/login">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                                Login
+                            </a>
+                        <?php
+
+                        }
+                        ?>
+
 
                     </div>
 

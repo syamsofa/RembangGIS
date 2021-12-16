@@ -18,29 +18,13 @@
 
 <script>
     class gradeLegend {
-
-        setMin(val) {
-            this.min = val
-        }
-        setMax(val) {
-            this.max = val
-        }
-        setJumlahKelas(val) {
-            this.jumlahKelas = val
-        }
-        setRentangKelas() {
-            this.rentangKelas = (this.max - this.min) / this.jumlahKelas
-        }
-
-        setGrades(val) {
-            this.grades = val
-        }
         constructor(grade_) {
             this.grade = grade_
             this.jumlahKelas = 6
         }
-        getSpektrum() {
-            var numberOfItems = this.grades.length;
+        getSpektrum(grades) {
+            console.log(grades)
+            var numberOfItems = grades.length;
             var arrColors = []
             var rainbow = new Rainbow();
             rainbow.setNumberRange(1, numberOfItems);
@@ -51,12 +35,12 @@
                 // s += '#' + hexColour + ', ';
 
                 arrColors.push({
-                    value: this.grades[i],
+                    value: grades[i],
                     color: '#' + hexColour
                 })
             }
 
-            this.arrColor = arrColors
+            return arrColors
         }
         getColor(d) {
             return d > 20 ? '#800026' :
@@ -68,27 +52,45 @@
                 d > 0 ? '#FED976' :
                 '#FFEDA0';
 
-            console.log(this.grades)
 
         }
-        getColor2(d) {
-            let color='#000000'
-            this.arrColor.forEach(array => {
-               
-                if (d >parseInt(array.value) ) {
-                    color = array.color
-                    
-
-                }
-              
-            });
-
-            return color
+        getColor2(d, arrColor) {
+            console.log(arrColor)
+            return d > 20 ? '#800026' :
+                d > 16 ? '#BD0026' :
+                d > 12 ? '#E31A1C' :
+                d > 8 ? '#FC4E2A' :
+                d > 3 ? '#FD8D3C' :
+                d > 2 ? '#FEB24C' :
+                d > 0 ? '#FED976' :
+                '#FFEDA0';
 
 
         }
-      
-        
+        getColorByScala(min, max, d) {
+            // return i = 1 ? '##ff0000' :
+            //     i = 2 ? '#db0000' :
+            //     i = 3 ? '#b60000' :
+            //     i = 4 ? '#920000' :
+            //     i = 5 ? '#6d0000' :
+            //     i = 6 ? '#490000' :
+            //     i = 7 ? '#240000' :
+            //     '#000000';
+
+
+        }
+        getColorByIndex(i) {
+            return i == 1 ? '##ff0000' :
+                i == 2 ? '#db0000' :
+                i == 3 ? '#b60000' :
+                i == 4 ? '#920000' :
+                i == 5 ? '#6d0000' :
+                i == 6 ? '#490000' :
+                i == 7 ? '#240000' :
+                '#000000';
+
+
+        }
 
     }
 </script>
@@ -187,14 +189,7 @@
     }
 
     function resetHighlight(e) {
-        var layer = e.target;
-        layer.setStyle({
-            weight: 2,
-            color: '#ffffff',
-            dashArray: '',
-            fillOpacity: 0.7
-        });
-
+        layerKec.resetStyle(e.target);
         info.update();
     }
 
@@ -266,19 +261,53 @@
 </div>
 
 <script>
+    var petaOverlay = L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href=”http://osm.org/copyright”>OpenStreetMap</a> contributors'
+    })
+
+    var layerKec = L.geoJson(Kecamatan, {
+        style: function(feature) {
+
+            GradeLegend = new gradeLegend()
+
+            return {
+                fillColor: GradeLegend.getColor(parseInt(feature.properties.nilai)),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        },
+        onEachFeature: onEachFeatureKecamatan
+        //,
+    })
+
     var newMap = L.map('petaTematik', {
         fullscreenControl: true,
         fullscreenControlOptions: {
             position: 'topleft'
         },
 
-        doubleClickZoom: true
+        doubleClickZoom: true,
+        layers: [petaOverlay, layerKec]
     }).setView([-6.74003, 111.47556], 12); //mengatur zoom dengan nilai 9
 
+    var overlayMaps = {
+        "Overlay": petaOverlay,
+        "Kecamatan": layerKec
+    };
+    var baseMaps = {
+        // "Overlay": petaOverlay
+        // "Tematik": layerKec
+    };
+
+    L.control.layers(baseMaps, overlayMaps, {
+        position: 'bottomright'
+    }).addTo(newMap);
     var pilihvar = L.control({
         position: 'topright'
     });
-
     pilihvar.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'infovar ');
         div.innerHTML = "<div class='form-group'>" +
@@ -321,21 +350,7 @@
 
     // layerKec.addTo(newMap);
 </script>
-<script>
-    L.control.browserPrint({
-        // printLayer: petaOverlay,
-        closePopupsOnPrint: false,
-        printModes: [
-            L.control.browserPrint.mode.landscape("Tabloid VIEW", "Tabloid"),
-            // L.control.browserPrint.mode("Alert", "User specified print action", "A6", customActionToPrint, false),
-            L.control.browserPrint.mode.landscape(),
-            "PORTrait",
-            L.control.browserPrint.mode.auto("Auto", "B4"),
-            L.control.browserPrint.mode.custom("Séléctionnez la zone", "B5")
-        ]
 
-    }).addTo(newMap);
-</script>
 <script>
     function getDataKecamatanByVariabel(idVariabel) {
         // newMap.removeLayer(layerKec)
@@ -350,75 +365,49 @@
                     IdVariabel: idVariabel
                 },
                 success: function(output) {
+                    console.log(output.Data.NilaiMinimal, output.Data.NilaiMaksimal)
+                    var jumlahKelas = 6
+                    var rentangKelas = (output.Data.NilaiMaksimal - output.Data.NilaiMinimal) / jumlahKelas
+                    console.log('rentangklas', rentangKelas)
 
-                    var GradeLegend = new gradeLegend()
-                    GradeLegend.setMin(output.Data.NilaiMinimal)
-                    GradeLegend.setMax(output.Data.NilaiMaksimal)
-                    console.log('MINMAX', GradeLegend.min, GradeLegend.max)
-                    GradeLegend.setJumlahKelas(6)
-                    GradeLegend.setRentangKelas()
-                    console.log('rentangklas', GradeLegend.rentangKelas)
+                    var grades = []
+                    for (g = 0; g < jumlahKelas; g++) {
 
-                    var tempGrades = []
-                    for (g = 0; g < GradeLegend.jumlahKelas; g++) {
-
-                        tempGrades.push(g * Math.ceil(GradeLegend.rentangKelas))
+                        grades.push(g * Math.ceil(rentangKelas))
 
                     }
+                    var GradeLegend = new gradeLegend(grades)
 
-
-                    GradeLegend.setGrades(tempGrades)
-                    console.log('GradeLegend.grades', GradeLegend.grades)
-
-                    var legend = L.control({
-                        position: 'topright'
-                    });
-
-
-
-                    legend.onAdd = function(map, grades) {
-                        var div = L.DomUtil.create('div', 'info legend'),
-                            grades = GradeLegend.grade,
-                            labels = [];
-
-                        GradeLegend.getSpektrum()
-                        console.log('arColor', GradeLegend.arrColor)
-                        for (var i = 0; i < GradeLegend.grades.length; i++) {
-                            // console.log(i)
-                            div.innerHTML +=
-                                '<i style="background:' + GradeLegend.arrColor[i].color + '"></i> ' +
-                                GradeLegend.grades[i] + (GradeLegend.grades[i + 1] ? '&ndash;' + GradeLegend.grades[i + 1] + '<br>' : '+');
-                        }
-
-                        return div;
-                    };
-                    legend.addTo(newMap)
-
+                    console.log('grades', grades)
                     var iter = 0
                     Kecamatan.features.forEach(element => {
                         element.properties.nilai = output.Data.DataKecamatan[iter].SumDesaByKecamatan
                         iter++
                     });
+                    var legend = L.control({
+                        position: 'topright'
+                    });
 
-                    var layerKec = L.geoJson(Kecamatan, {
-                        style: function(feature) {
-                            return {
-                                fillColor: GradeLegend.getColor2(parseInt(feature.properties.nilai)),
+                    legend.onAdd = function(map, grades) {
 
-                                // fillColor: '#000000',
-                                weight: 2,
-                                opacity: 1,
-                                color: 'white',
-                                dashArray: '3',
-                                fillOpacity: 0.7
-                            };
-                        },
-                        onEachFeature: onEachFeatureKecamatan
-                        //,
-                    })
+                        var div = L.DomUtil.create('div', 'info legend'),
+                            grades = GradeLegend.grade,
+                            labels = [];
 
+                        GradeLegend = new gradeLegend()
+                        console.log('grades', grades)
+                        const arrColor = GradeLegend.getSpektrum(grades)
+                        console.log(arrColor)
+                        for (var i = 0; i < grades.length; i++) {
+                            // console.log(i)
+                            div.innerHTML +=
+                                '<i style="background:' + arrColor[i].color + '"></i> ' +
+                                grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                        }
 
-
+                        return div;
+                    };
+                    legend.addTo(newMap)
                     layerKec.addTo(newMap)
 
                 }
@@ -431,4 +420,19 @@
 
 
     }
+</script>
+<script>
+    L.control.browserPrint({
+        // printLayer: petaOverlay,
+        closePopupsOnPrint: false,
+        printModes: [
+            L.control.browserPrint.mode.landscape("Tabloid VIEW", "Tabloid"),
+            // L.control.browserPrint.mode("Alert", "User specified print action", "A6", customActionToPrint, false),
+            L.control.browserPrint.mode.landscape(),
+            "PORTrait",
+            L.control.browserPrint.mode.auto("Auto", "B4"),
+            L.control.browserPrint.mode.custom("Séléctionnez la zone", "B5")
+        ]
+
+    }).addTo(newMap);
 </script>
