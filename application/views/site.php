@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,8 +13,6 @@
     <link href="<?php echo base_url(); ?>/sb-admin/dist/css/styles.css" rel="stylesheet" />
     <link href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>lib/jquery.min.js"></script>
     <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
@@ -21,8 +20,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="<?php echo base_url(); ?>/sb-admin/dist/js/scripts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-    <script src="<?php echo base_url(); ?>/sb-admin/dist/assets/demo/chart-area-demo.js"></script>
-    <script src="<?php echo base_url(); ?>/sb-admin/dist/assets/demo/chart-bar-demo.js"></script>
 
     <style>
         html {
@@ -75,7 +72,7 @@
                             </nav>
                         </div>
                         <?php
-                        if ($this->session->userdata()) {
+                        if ($this->session->userdata('Nama')) {
                         ?>
 
                             <a class="nav-link" href="<?php echo base_url(); ?>site/variabel">
@@ -92,7 +89,7 @@
                         ?>
 
                         <?php
-                        if (!$this->session->userdata()) {
+                        if (!$this->session->userdata('Nama')) {
                         ?>
 
                             <a class="nav-link" href="<?php echo base_url(); ?>site/login">
@@ -102,10 +99,25 @@
                         <?php
 
                         }
+
                         ?>
 
+                        <?php
+                        if ($this->session->userdata('Nama')) {
+                        ?>
+
+                            <a class="nav-link" href="<?php echo base_url(); ?>site/logout">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
+                                Logout
+                            </a>
+                        <?php
+
+                        }
+
+                        ?>
 
                     </div>
+
 
                 </div>
                 <div class="sb-sidenav-footer">

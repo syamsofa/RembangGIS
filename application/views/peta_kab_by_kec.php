@@ -273,7 +273,7 @@
         },
 
         doubleClickZoom: true
-    }).setView([-6.74003, 111.47556], 12); //mengatur zoom dengan nilai 9
+    }).setView([-6.74003, 111.47556], 11); //mengatur zoom dengan nilai 9
 
     var layerKec = L.geoJson(Kecamatan, {
         style: function(feature) {

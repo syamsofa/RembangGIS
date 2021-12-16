@@ -23,7 +23,7 @@ class Site extends CI_Controller
 			"judulMenu" => "Index",
 			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
 			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
-	
+
 		];
 		$this->load->view('site', $data);
 	}
@@ -71,7 +71,7 @@ class Site extends CI_Controller
 			"judulMenu" => "Input Data",
 			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
 			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
-			
+
 		];
 		// print_r($data);
 		$this->load->view('site', $data);
@@ -79,14 +79,27 @@ class Site extends CI_Controller
 	public function login()
 	{
 
-		$data = [
-			"menu" => $this->menuPilih,
-			"judulMenu" => "Login",
-			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
-			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
-			
-		];
-		// print_r($data);
-		$this->load->view('site', $data);
+		if ($this->session->userdata('Nama'))
+			redirect('/site/dashboard');
+		else {
+			$data = [
+				"menu" => $this->menuPilih,
+				"judulMenu" => "Login",
+				"daftarVariabel" => $this->model_variabel->ReadVariabel(),
+				"daftarKecamatan" => $this->model_data->DaftarKecamatan()
+
+			];
+			// print_r($data);
+			$this->load->view('site', $data);
+		}
+	}
+	public function logout()
+	{
+		$array_items = array('Nama', 'Email', 'UrlPicture');
+		$this->session->unset_userdata($array_items);
+
+		redirect(
+			'site'
+		);
 	}
 }
