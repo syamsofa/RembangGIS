@@ -8,6 +8,7 @@
 <!-- Load Esri Leaflet Vector from CDN -->
 <script src="https://unpkg.com/esri-leaflet-vector@3.1.0/dist/esri-leaflet-vector.js" integrity="sha512-AAcPGWoYOQ7VoaC13L/rv6GwvzEzyknHQlrtdJSGD6cSzuKXDYILZqUhugbJFZhM+bEXH2Ah7mA1OxPFElQmNQ==" crossorigin=""></script>
 <script src="./../map/kecamatan.js"></script>
+<script src="./../map/desa.js"></script>
 
 <script src="<?php echo base_url(); ?>lib/leaflet.browser.print.js"></script>
 <script src="<?php echo base_url(); ?>lib/leaflet.browser.print.utils.js"></script>
@@ -163,12 +164,9 @@
     }
 </style>
 <script>
-    var info = L.control({  position: 'topleft'});
-
-    function zoomToFeature(e) {
-        newMap.fitBounds(e.target.getBounds());
-
-    }
+    var info = L.control({
+        position: 'topleft'
+    });
 
     function highlightFeature(e) {
         var layer = e.target;
@@ -185,6 +183,41 @@
         }
         info.update(layer.feature.properties);
     }
+
+    function zoomToFeature(e) {
+        newMap.fitBounds(e.target.getBounds());
+        var layer = e.target;
+        var clickBounds = L.latLngBounds(e.latlng, e.latlng);
+        console.log(clickBounds)
+
+        var intersectingFeatures = [];
+        for (var l in newMap._layers) {
+            var overlay = newMap._layers[l];
+            if (overlay._layers) {
+                for (var f in overlay._layers) {
+                    var feature = overlay._layers[f];
+                    var bounds;
+                    if (feature.getBounds) bounds = feature.getBounds();
+                    else if (feature._latlng) {
+                        bounds = L.latLngBounds(feature._latlng, feature._latlng);
+                    }
+                    if (bounds && clickBounds.intersects(bounds)) {
+                        intersectingFeatures.push(feature);
+                    }
+                }
+            }
+        }
+        // if at least one feature found, show it
+        if (intersectingFeatures.length) {
+            var html = "Keterangan <br/>Kecamatan : "+layer.feature.properties.KECAMATAN+
+            "<br/>Nilai : "+layer.feature.properties.nilai;
+
+            newMap.openPopup(html, e.latlng, {
+                offset: L.point(0, -24)
+            });
+        }
+    }
+
 
     function resetHighlight(e) {
         var layer = e.target;
@@ -301,8 +334,20 @@
     pilihvar.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'infovar ');
         div.innerHTML = "<div class='form-group'>" +
+            "<label for='exampleFormControlSelect1'><b>Pilih Tahun: <b></label>" +
+            "<select class='form-control' style='width: 100%;' id='selectTahun'>" +
+            "<option>PILIH</option>" +
+            "<option value=2020>2020</option>" +
+            "<option value=2021>2021</option>" +
+
+
+            "</select>" +
+            "</div>" +
+            "<div class='form-group'>" +
+            "</div>" +
+            "<div class='form-group'>" +
             "<label for='exampleFormControlSelect1'><b>Pilih Variabel: <b></label>" +
-            "<select class='form-control' style='width: 100%;' id='selectVariabel' onchange='getDataKecamatanByVariabel(this.value)'>" +
+            "<select class='form-control' style='width: 100%;' id='selectVariabel' >" +
             "<option>PILIH</option>" +
 
             "<?php
@@ -314,8 +359,9 @@
                 ?>" +
             "</select>" +
             "</div>" +
-            "<div class='form-group'><br>" +
-            "</div>";
+            "<div class='form-group'>" +
+            "<button class='btn btn-primary' onclick='getDataKecamatanByVariabel()'>Tampilkan</button>"
+        "</div>";
         div.firstChild.onmousedown = div.firstChild.ondblclick = L.DomEvent.stopPropagation;
         return div;
     };
@@ -357,17 +403,21 @@
     }).addTo(newMap);
 </script>
 <script>
-    function getDataKecamatanByVariabel(idVariabel) {
+    function getDataKecamatanByVariabel() {
+        idVariabel = $("#selectVariabel").val()
+        tahun = $("#selectTahun").val()
+
         // newMap.removeLayer(layerKec)
         $(".info.legend").remove()
         setTimeout(() => {
             $.ajax({
                 type: "POST",
                 async: false,
-                url: '<?php echo base_url(); ?>services/DataKecamatanByVariabel',
+                url: '<?php echo base_url(); ?>services/DataKecamatanByVariabelByTahun',
                 dataType: 'json',
                 data: {
-                    IdVariabel: idVariabel
+                    IdVariabel: idVariabel,
+                    Tahun: tahun
                 },
                 success: function(output) {
 
@@ -417,7 +467,7 @@
 
                     var iter = 0
                     Kecamatan.features.forEach(element => {
-                        console.log(element.properties.KECAMATAN,output.Data.DataKecamatan[iter].Nama)
+                        console.log(element.properties.KECAMATAN, output.Data.DataKecamatan[iter].Nama)
                         element.properties.nilai = output.Data.DataKecamatan[iter].SumDesaByKecamatan
                         iter++
                     });
@@ -451,6 +501,21 @@
 
 
 
+
+    }
+</script>
+
+<script>
+    Desa.features.forEach(element => {
+        console.log(element)
+    });
+
+    console.log(Desa)
+</script>
+
+<script>
+    function makePetaDesa(Kecamatan)
+    {
 
     }
 </script>

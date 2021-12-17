@@ -42,6 +42,7 @@ class Model_data extends CI_Model
     public function DataKecamatanByVariabelByTahun($IdVariabel, $Tahun)
     {
 
+        print_r($IdVariabel, $Tahun);
         $query = $this->db->query("select * from wilayah where Level=?
 		", array(3));
         $data = array();
@@ -100,11 +101,11 @@ class Model_data extends CI_Model
         return $query->result_array();
     }
 
-    public function DataDesaByKecamatanByVariabelByTahun($KodeKecamatan,$IdVariabel, $Tahun)
+    public function DataDesaByKecamatanByVariabelByTahun($KodeKecamatan, $IdVariabel, $Tahun)
     {
 
         $query = $this->db->query("select * from wilayah where Level=? and substr(Kode,1,7)=?
-		", array(4,substr($KodeKecamatan,0,7)));
+		", array(4, substr($KodeKecamatan, 0, 7)));
         $data = array();
 
         $nilaiMaks = 0;
