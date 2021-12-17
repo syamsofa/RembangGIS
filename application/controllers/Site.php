@@ -20,7 +20,7 @@ class Site extends CI_Controller
 	{
 		$data = [
 			"menu" => $this->menuPilih,
-			"judulMenu" => "Index",
+			"judulMenu" => "Halaman Depan",
 			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
 			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
 
@@ -32,7 +32,7 @@ class Site extends CI_Controller
 
 		$data = [
 			"menu" => $this->menuPilih,
-			"judulMenu" => "Peta Tematik Kab Rembang By Kecamatan",
+			"judulMenu" => "Tematik Menurut Kecamatan",
 			"daftarVariabel" => $this->model_variabel->ReadVariabel(),
 			"daftarKecamatan" => $this->model_data->DaftarKecamatan()
 		];

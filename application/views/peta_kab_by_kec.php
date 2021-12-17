@@ -8,6 +8,7 @@
 <!-- Load Esri Leaflet Vector from CDN -->
 <script src="https://unpkg.com/esri-leaflet-vector@3.1.0/dist/esri-leaflet-vector.js" integrity="sha512-AAcPGWoYOQ7VoaC13L/rv6GwvzEzyknHQlrtdJSGD6cSzuKXDYILZqUhugbJFZhM+bEXH2Ah7mA1OxPFElQmNQ==" crossorigin=""></script>
 <script src="./../map/kecamatan.js"></script>
+<script src="./../map/kabupaten.js"></script>
 <script src="./../map/desa.js"></script>
 
 <script src="<?php echo base_url(); ?>lib/leaflet.browser.print.js"></script>
@@ -184,11 +185,32 @@
         info.update(layer.feature.properties);
     }
 
+    function highlightFeatureDesa(e) {
+        var layer = e.target;
+
+        // weight: 2,
+        //             opacity: 1,
+        //             color: '#666',
+        //             dashArray: '3',
+        //             fillColor: 'white',
+        //             fillOpacity: 1
+        layer.setStyle({
+            weight: 2,
+            color: '#666',
+            dashArray: '3',
+            fillColor: 'white',
+            fillOpacity: 1
+        });
+
+        // info.update(layer.feature.properties);
+    }
+
     function zoomToFeature(e) {
+
         newMap.fitBounds(e.target.getBounds());
         var layer = e.target;
         var clickBounds = L.latLngBounds(e.latlng, e.latlng);
-        console.log(clickBounds)
+        // console.log(layer.feature.properties.KODE_DAGRI)
 
         var intersectingFeatures = [];
         for (var l in newMap._layers) {
@@ -209,13 +231,38 @@
         }
         // if at least one feature found, show it
         if (intersectingFeatures.length) {
-            var html = "Keterangan <br/>Kecamatan : "+layer.feature.properties.KECAMATAN+
-            "<br/>Nilai : "+layer.feature.properties.nilai;
+            var html = "Keterangan <br/>Kecamatan : " + layer.feature.properties.KECAMATAN +
+                "<br/>Nilai : " + layer.feature.properties.nilai;
 
             newMap.openPopup(html, e.latlng, {
                 offset: L.point(0, -24)
             });
         }
+
+
+        // const petaDesaKustom = new PetaDesaKustom()
+        // PetaDesa = petaDesaKustom.PenambahanArrayDesa(Desa.features, layer.feature.properties.KODE_DAGRI)
+        // console.log(PetaDesa)
+        // const layerDesa = L.geoJson(PetaDesa, {
+        //     style: function(feature) {
+        //         return {
+        //             weight: 2,
+        //             opacity: 1,
+        //             color: '#666',
+        //             dashArray: '3',
+        //             fillColor: 'white',
+        //             fillOpacity: 1
+        //         };
+        //     },
+        //     onEachFeature: onEachFeatureDesa
+        // })
+
+
+        // newMap.addLayer(layerDesa);
+
+
+
+        // layerDesa.remove()
     }
 
 
@@ -231,11 +278,34 @@
         info.update();
     }
 
+    function resetHighlightDesa(e) {
+        var layer = e.target;
+        layer.setStyle({
+            weight: 2,
+            color: '#ffffff',
+            dashArray: '3',
+            fillColor: 'white',
+            fillOpacity: 1
+        });
+
+        // info.update();
+    }
+
     function onEachFeatureKecamatan(feature, layer) {
         layer.on({
             mouseover: highlightFeature,
             mouseout: resetHighlight,
             click: zoomToFeature
+
+        });
+    }
+
+    function onEachFeatureDesa(feature, layer) {
+        layer.on({
+            mouseover: highlightFeatureDesa,
+            mouseout: resetHighlightDesa,
+            click: zoomToFeature
+
         });
     }
 
@@ -285,9 +355,6 @@
     <div class="col-xl-12">
         <div class="card mb-4">
             <div class="card-body" id="petaTematik" style="margin: auto;width: 100%; height: 600px;">
-                <button type="button" id="Btn2" value="Ke Lokasi Saya Berada" onclick="GoToOurLocation()" style="position: absolute;
-                bottom: 50px;" class="btnStyle span3 leaflet-control btn btn-button btn-success">
-                    <i class="fa fa-compass" aria-hidden="true"></i> Ke Lokasi Saya</button>
             </div>
 
 
@@ -323,6 +390,23 @@
         //,
     })
 
+    var layerKab = L.geoJson(Kabupaten, {
+        style: function(feature) {
+            return {
+                weight: 2,
+                opacity: 1,
+                color: '#666',
+                dashArray: '3',
+                fillColor: 'white',
+                fillOpacity: 1
+            };
+        }
+        // onEachFeature: onEachFeatureKecamatan
+        //,
+    })
+
+
+    layerKab.addTo(newMap)
 
 
     layerKec.addTo(newMap)
@@ -388,7 +472,7 @@
 </script>
 <script>
     L.control.browserPrint({
-        position: 'topright',
+        position: 'bottomright',
         // printLayer: petaOverlay,
         closePopupsOnPrint: false,
         printModes: [
@@ -467,8 +551,15 @@
 
                     var iter = 0
                     Kecamatan.features.forEach(element => {
-                        console.log(element.properties.KECAMATAN, output.Data.DataKecamatan[iter].Nama)
-                        element.properties.nilai = output.Data.DataKecamatan[iter].SumDesaByKecamatan
+                        // console.log(element.properties.KECAMATAN, element.properties.KODE_DAGRI, output.Data.DataKecamatan[iter].Nama, output.Data.DataKecamatan[iter].Kode)
+
+                        output.Data.DataKecamatan.forEach(elementDataBps => {
+                            if (elementDataBps.Kode.substring(0, 6) == element.properties.KODE_DAGRI) {
+                                console.log(elementDataBps.Kode)
+                                element.properties.nilai = elementDataBps.SumDesaByKecamatan
+
+                            }
+                        });
                         iter++
                     });
 
@@ -505,17 +596,39 @@
     }
 </script>
 
-<script>
-    Desa.features.forEach(element => {
-        console.log(element)
-    });
 
-    console.log(Desa)
+<script>
+    class PetaDesaKustom {
+        constructor() {
+            this.Peta = {
+                type: 'FeatureCollection',
+                features: []
+            }
+
+        }
+
+        PenambahanArrayDesa(Desafeatures, KodeKecamatanDagri) {
+
+            let arrayPetaDesa = []
+
+            Desafeatures.forEach(element => {
+                let kode_dagri = element.properties.KODE_DAGRI.toString()
+                if (kode_dagri.substring(0, 6) == KodeKecamatanDagri) {
+                    // console.log(element)
+                    arrayPetaDesa.push(element)
+                }
+            });
+
+            this.Peta.features = arrayPetaDesa
+            return this.Peta
+
+            // console.log(this.Peta)
+
+        }
+
+    }
 </script>
 
 <script>
-    function makePetaDesa(Kecamatan)
-    {
 
-    }
 </script>
